@@ -9,6 +9,29 @@ requireLogin();
 $message = '';
 $errors = [];
 
+$validCategories = [
+    'bestrating',
+    'grondwerk',
+    'tuinaanleg',
+    'tuinonderhoud',
+    'schuttingen',
+    'overig'
+];
+
+$categoryLabels = [
+    'bestrating' => 'Bestrating',
+    'grondwerk' => 'Grondwerk',
+    'tuinaanleg' => 'Tuinaanleg',
+    'tuinonderhoud' => 'Tuinonderhoud',
+    'schuttingen' => 'Schuttingen / houtwerk',
+    'overig' => 'Overig'
+];
+
+function categoryLabel($category, $categoryLabels)
+{
+    return $categoryLabels[$category] ?? $category;
+}
+
 // Werkzaamheid toevoegen
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_service'])) {
     $title = trim($_POST['title'] ?? '');
@@ -20,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_service'])) {
         $errors[] = 'Vul een titel in.';
     }
 
-    if (!in_array($main_category, ['bestratingswerk', 'hovenierswerk'])) {
+    if (!in_array($main_category, $validCategories)) {
         $errors[] = 'Kies een geldige categorie.';
     }
 
@@ -90,19 +113,6 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute();
 $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-function categoryLabel($category)
-{
-    if ($category === 'bestratingswerk') {
-        return 'Bestratingswerk';
-    }
-
-    if ($category === 'hovenierswerk') {
-        return 'Hovenierswerk';
-    }
-
-    return $category;
-}
 
 ?>
 
@@ -385,6 +395,14 @@ function categoryLabel($category)
             margin-bottom: 20px;
         }
 
+        .error-box p {
+            margin: 0 0 8px;
+        }
+
+        .error-box p:last-child {
+            margin-bottom: 0;
+        }
+
         .service-list {
             display: grid;
             gap: 14px;
@@ -499,9 +517,9 @@ function categoryLabel($category)
                 flex-wrap: wrap;
             }
         }
- </style>
+    </style>
 
-<link rel="stylesheet" href="../public/assets/css/admin-responsive.css">
+    <link rel="stylesheet" href="../public/assets/css/admin-responsive.css">
 </head>
 <body>
 
@@ -543,7 +561,7 @@ function categoryLabel($category)
                         <h1>Werkzaamheden beheren</h1>
                         <p>
                             Voeg diensten toe, zet ze tijdelijk uit of verwijder ze.
-                            Alleen zichtbare werkzaamheden worden op de publieke website getoond.
+                            Alleen zichtbare werkzaamheden worden op de publieke website en afspraakpagina getoond.
                         </p>
                     </div>
 
@@ -582,8 +600,12 @@ function categoryLabel($category)
                                 <label>Categorie</label>
                                 <select name="main_category" required>
                                     <option value="">Kies categorie</option>
-                                    <option value="bestratingswerk">Bestratingswerk</option>
-                                    <option value="hovenierswerk">Hovenierswerk</option>
+
+                                    <?php foreach ($categoryLabels as $categoryKey => $categoryName): ?>
+                                        <option value="<?php echo htmlspecialchars($categoryKey); ?>">
+                                            <?php echo htmlspecialchars($categoryName); ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -609,9 +631,11 @@ function categoryLabel($category)
                                             <div class="service-title">
                                                 <?php echo htmlspecialchars($service['title']); ?>
                                             </div>
+
                                             <br>
+
                                             <span class="badge category">
-                                                <?php echo htmlspecialchars(categoryLabel($service['main_category'])); ?>
+                                                <?php echo htmlspecialchars(categoryLabel($service['main_category'], $categoryLabels)); ?>
                                             </span>
                                         </div>
 
