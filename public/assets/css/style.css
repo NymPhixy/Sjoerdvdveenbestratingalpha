@@ -596,3 +596,114 @@ img {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
+/* Luxe categorieblokken homepage */
+.category-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.category-block {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(247, 244, 239, 0.72));
+    min-height: 100%;
+    transition: 0.25s ease;
+}
+
+.category-block::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top right, rgba(176, 138, 87, 0.18), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(36, 63, 50, 0.08), transparent 36%);
+    pointer-events: none;
+}
+
+.category-block:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-soft);
+}
+
+.category-block h3,
+.category-block p,
+.category-block .cards {
+    position: relative;
+    z-index: 1;
+}
+
+.category-block h3 {
+    color: var(--color-green);
+}
+
+.category-block > p {
+    min-height: 52px;
+}
+
+.service-card {
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.service-card h4 {
+    color: var(--color-dark);
+}
+
+.service-card .label {
+    background: rgba(176, 138, 87, 0.10);
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
+/* Hero card mooier over video */
+.hero-video-section .hero-card {
+    min-height: 360px;
+}
+
+.hero-video-section .hero-card p {
+    font-weight: 800;
+    font-size: 17px;
+}
+
+/* Homepage CTA afspraak sterker */
+#afspraak .section-heading {
+    background: var(--color-green);
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: 42px;
+    max-width: 100%;
+    box-shadow: var(--shadow-soft);
+}
+
+#afspraak .section-heading p {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+#afspraak .eyebrow {
+    color: #d7b57d;
+}
+
+#afspraak .button.primary {
+    background: white;
+    color: var(--color-green);
+}
+
+/* Responsive categorieblokken */
+@media (max-width: 1050px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-block > p {
+        min-height: auto;
+    }
+
+    #afspraak .section-heading {
+        padding: 28px;
+    }
+}
