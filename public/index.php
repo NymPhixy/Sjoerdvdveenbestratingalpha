@@ -219,7 +219,7 @@ $tiktokVideos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="project-grid">
             <?php foreach ($projects as $project): ?>
-                <article class="project-card">
+              <a class="project-card" href="project.php?id=<?php echo (int) $project['id']; ?>">
                     <?php if (!empty($project['cover_image'])): ?>
                         <img
                             src="<?php echo htmlspecialchars($project['cover_image']); ?>"
@@ -248,7 +248,7 @@ $tiktokVideos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <?php echo htmlspecialchars($project['description'] ?: 'Binnenkort meer informatie over dit project.'); ?>
                         </p>
                     </div>
-                </article>
+                </a>
             <?php endforeach; ?>
 
             <?php if (empty($projects)): ?>

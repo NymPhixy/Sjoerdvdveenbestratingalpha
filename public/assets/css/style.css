@@ -707,3 +707,11 @@ img {
         padding: 28px;
     }
 }
+.project-card {
+    color: inherit;
+    text-decoration: none;
+}
+
+.project-card:hover .project-content h3 {
+    color: var(--color-green);
+}
