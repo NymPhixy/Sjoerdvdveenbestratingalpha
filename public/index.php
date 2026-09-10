@@ -19,23 +19,48 @@ $whatsappUrl = $whatsapp ? 'https://wa.me/' . preg_replace('/[^0-9]/', '', $what
 $phoneUrl = $phone ? 'tel:' . preg_replace('/[^0-9+]/', '', $phone) : '';
 $mailUrl = $email ? 'mailto:' . $email : '';
 
+$categoryLabels = [
+    'bestrating' => 'Bestrating',
+    'grondwerk' => 'Grondwerk',
+    'tuinaanleg' => 'Tuinaanleg',
+    'tuinonderhoud' => 'Tuinonderhoud',
+    'schuttingen' => 'Schuttingen / houtwerk',
+    'overig' => 'Overig'
+];
+
+$categoryDescriptions = [
+    'bestrating' => 'Opritten, terrassen, paden en sierbestrating netjes aangelegd.',
+    'grondwerk' => 'Uitgraven, egaliseren en voorbereidende werkzaamheden.',
+    'tuinaanleg' => 'Complete aanleg van tuinen, van indeling tot afwerking.',
+    'tuinonderhoud' => 'Snoeien, opruimen en periodiek onderhoud van de tuin.',
+    'schuttingen' => 'Schuttingen, afscheidingen en eenvoudig houtwerk in de tuin.',
+    'overig' => 'Voor klussen die niet direct onder een vaste categorie vallen.'
+];
+
 // Werkzaamheden ophalen
 $stmt = $pdo->prepare("
     SELECT *
     FROM services
     WHERE is_visible = 1
-    ORDER BY main_category, title
+    ORDER BY main_category ASC, title ASC
 ");
 $stmt->execute();
 $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$bestratingswerk = array_filter($services, function ($service) {
-    return $service['main_category'] === 'bestratingswerk';
-});
+$servicesByCategory = [
+    'bestrating' => [],
+    'grondwerk' => [],
+    'tuinaanleg' => [],
+    'tuinonderhoud' => [],
+    'schuttingen' => [],
+    'overig' => []
+];
 
-$hovenierswerk = array_filter($services, function ($service) {
-    return $service['main_category'] === 'hovenierswerk';
-});
+foreach ($services as $service) {
+    if (isset($servicesByCategory[$service['main_category']])) {
+        $servicesByCategory[$service['main_category']][] = $service;
+    }
+}
 
 // Projecten ophalen
 $stmt = $pdo->prepare("
@@ -99,36 +124,42 @@ $tiktokVideos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <main>
 
-    <section class="hero">
-        <div class="hero-content">
-            <span class="eyebrow">
-                <?php echo $location ? htmlspecialchars($location) : 'Vakwerk buiten'; ?>
-            </span>
+    <section class="hero hero-video-section">
+    <video class="hero-bg-video" autoplay muted loop playsinline>
+        <source src="assets/videos/hero.mp4" type="video/mp4">
+    </video>
 
-            <h1>Luxe buitenruimtes, strak aangelegd</h1>
+    <div class="hero-overlay"></div>
 
-            <p>
-                <?php echo htmlspecialchars($introText); ?>
-            </p>
+    <div class="hero-content">
+        <span class="eyebrow">
+            <?php echo $location ? htmlspecialchars($location) : 'Vakwerk buiten'; ?>
+        </span>
 
-            <div class="hero-actions">
-                <a href="afspraak.php" class="button primary">Plan een afspraak</a>
-                <a href="#projecten" class="button secondary">Bekijk projecten</a>
-            </div>
+        <h1>Luxe buitenruimtes, strak aangelegd</h1>
+
+        <p>
+            <?php echo htmlspecialchars($introText); ?>
+        </p>
+
+        <div class="hero-actions">
+            <a href="afspraak.php" class="button primary">Plan een afspraak</a>
+            <a href="#projecten" class="button secondary">Bekijk projecten</a>
         </div>
+    </div>
 
-        <div class="hero-card">
-            <p>Modern straatwerk</p>
-            <p>Hovenierswerk</p>
-            <p>Oriëntatiegesprekken op afspraak</p>
-        </div>
-    </section>
+    <div class="hero-card">
+        <p>Modern straatwerk</p>
+        <p>Hovenierswerk</p>
+        <p>Oriëntatiegesprekken op afspraak</p>
+    </div>
+</section>
 
     <section id="werkzaamheden" class="section">
         <div class="section-heading">
             <span class="eyebrow">Werkzaamheden</span>
 
-            <h2>Bestratingswerk en hovenierswerk duidelijk gescheiden</h2>
+            <h2>Werkzaamheden voor tuin, straatwerk en buitenruimte</h2>
 
             <p>
                 Kies direct de richting die past bij uw klus. Sjoerd helpt met een sterke basis,
@@ -137,57 +168,40 @@ $tiktokVideos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="category-grid">
-            <div class="category-block">
-                <h3>Bestratingswerk</h3>
+            <?php foreach ($servicesByCategory as $categoryKey => $categoryServices): ?>
+                <div class="category-block">
+                    <h3><?php echo htmlspecialchars($categoryLabels[$categoryKey]); ?></h3>
 
-                <p>
-                    Voor strak, duurzaam en netjes afgewerkt straatwerk rondom woning,
-                    tuin, oprit of terras.
-                </p>
+                    <p>
+                        <?php echo htmlspecialchars($categoryDescriptions[$categoryKey]); ?>
+                    </p>
 
-                <div class="cards">
-                    <?php foreach ($bestratingswerk as $service): ?>
-                        <article class="service-card">
-                            <span class="label">Bestratingswerk</span>
-                            <h4><?php echo htmlspecialchars($service['title']); ?></h4>
-                            <p><?php echo htmlspecialchars($service['description']); ?></p>
-                        </article>
-                    <?php endforeach; ?>
+                    <div class="cards">
+                        <?php foreach ($categoryServices as $service): ?>
+                            <article class="service-card">
+                                <span class="label">
+                                    <?php echo htmlspecialchars($categoryLabels[$categoryKey]); ?>
+                                </span>
 
-                    <?php if (empty($bestratingswerk)): ?>
-                        <article class="service-card">
-                            <h4>Nog geen bestratingswerk toegevoegd</h4>
-                            <p>Werkzaamheden die zichtbaar staan in het dashboard verschijnen hier automatisch.</p>
-                        </article>
-                    <?php endif; ?>
+                                <h4><?php echo htmlspecialchars($service['title']); ?></h4>
+
+                                <p>
+                                    <?php echo htmlspecialchars($service['description']); ?>
+                                </p>
+                            </article>
+                        <?php endforeach; ?>
+
+                        <?php if (empty($categoryServices)): ?>
+                            <article class="service-card">
+                                <h4>Nog geen werkzaamheden toegevoegd</h4>
+                                <p>
+                                    Werkzaamheden die zichtbaar staan in het dashboard verschijnen hier automatisch.
+                                </p>
+                            </article>
+                        <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-
-            <div class="category-block">
-                <h3>Hovenierswerk</h3>
-
-                <p>
-                    Voor een verzorgde, praktische en sfeervolle buitenruimte
-                    met oog voor groen en indeling.
-                </p>
-
-                <div class="cards">
-                    <?php foreach ($hovenierswerk as $service): ?>
-                        <article class="service-card">
-                            <span class="label">Hovenierswerk</span>
-                            <h4><?php echo htmlspecialchars($service['title']); ?></h4>
-                            <p><?php echo htmlspecialchars($service['description']); ?></p>
-                        </article>
-                    <?php endforeach; ?>
-
-                    <?php if (empty($hovenierswerk)): ?>
-                        <article class="service-card">
-                            <h4>Nog geen hovenierswerk toegevoegd</h4>
-                            <p>Werkzaamheden die zichtbaar staan in het dashboard verschijnen hier automatisch.</p>
-                        </article>
-                    <?php endif; ?>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 
@@ -347,7 +361,7 @@ $tiktokVideos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <?php if ($facebookUrl || $instagramUrl || $tiktokUrl): ?>
-            <div class="hero-actions">
+            <div class="contact-actions">
                 <?php if ($facebookUrl): ?>
                     <a class="button secondary" href="<?php echo htmlspecialchars($facebookUrl); ?>" target="_blank">
                         Facebook
