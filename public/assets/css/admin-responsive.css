@@ -1,0 +1,396 @@
+/* =========================================================
+   RESPONSIVE ADMIN DASHBOARD
+   Werkt voor dashboard, agenda, boekingen, werkzaamheden,
+   projecten, tiktok en gebruikers.
+========================================================= */
+
+/* Algemene veiligheid */
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Afbeeldingen nooit buiten container */
+img {
+    max-width: 100%;
+}
+
+/* Tabellen mogen horizontaal scrollen */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Forms netjes op mobiel */
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}
+
+/* Grote layouts */
+@media (max-width: 1200px) {
+    .dashboard-shell,
+    .calendar-shell {
+        padding: 20px;
+    }
+
+    .dashboard-body {
+        grid-template-columns: 230px 1fr;
+    }
+
+    .main,
+    .calendar-main {
+        padding: 24px;
+    }
+
+    .layout,
+    .forms-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablet */
+@media (max-width: 950px) {
+    .dashboard-shell,
+    .calendar-shell {
+        padding: 14px;
+    }
+
+    .dashboard-frame {
+        border-radius: 22px;
+    }
+
+    .dashboard-body {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border, #e1dbd1);
+    }
+
+    .topbar,
+    .calendar-topbar {
+        min-height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 20px;
+    }
+
+    .brand {
+        font-size: 20px;
+    }
+
+    .topbar-center,
+    .searchbar {
+        width: 100%;
+        max-width: none;
+    }
+
+    .topbar-actions,
+    .top-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .topbar-actions .button,
+    .top-actions .button {
+        flex: 1;
+        min-width: 160px;
+    }
+
+    .main,
+    .calendar-main {
+        padding: 22px;
+    }
+
+    .page-header,
+    .calendar-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-header h1,
+    .calendar-title h1 {
+        font-size: 42px;
+    }
+
+    .layout,
+    .forms-section {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-nav {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .profile-card {
+        margin-bottom: 18px;
+    }
+}
+
+/* Mobiel */
+@media (max-width: 700px) {
+    .dashboard-shell,
+    .calendar-shell {
+        padding: 10px;
+    }
+
+    .dashboard-frame {
+        border-radius: 18px;
+    }
+
+    .topbar,
+    .calendar-topbar {
+        padding: 18px;
+    }
+
+    .brand {
+        font-size: 19px;
+    }
+
+    .topbar-center,
+    .searchbar {
+        border-radius: 16px;
+        line-height: 1.5;
+    }
+
+    .topbar-actions,
+    .top-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .topbar-actions .button,
+    .top-actions .button,
+    .button {
+        width: 100%;
+    }
+
+    .sidebar {
+        padding: 18px;
+    }
+
+    .admin-nav {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-nav a {
+        padding: 13px 14px;
+    }
+
+    .main,
+    .calendar-main {
+        padding: 18px;
+    }
+
+    .page-header,
+    .calendar-header {
+        margin-bottom: 22px;
+    }
+
+    .page-header h1,
+    .calendar-title h1 {
+        font-size: 34px;
+        letter-spacing: -0.04em;
+    }
+
+    .page-header p,
+    .calendar-title p,
+    .card p,
+    .admin-card p {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .card,
+    .admin-card {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .card h2,
+    .admin-card h2 {
+        font-size: 26px;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    .layout,
+    .forms-section {
+        gap: 18px;
+    }
+
+    .inline-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .small-link,
+    .delete-link {
+        display: inline-flex;
+        width: 100%;
+        justify-content: center;
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: var(--beige, #f7f4ef);
+    }
+
+    .delete-link {
+        background: #f8dfdf;
+    }
+}
+
+/* Kleine mobiel */
+@media (max-width: 480px) {
+    .dashboard-shell,
+    .calendar-shell {
+        padding: 6px;
+    }
+
+    .dashboard-frame {
+        border-radius: 14px;
+    }
+
+    .topbar,
+    .calendar-topbar,
+    .sidebar,
+    .main,
+    .calendar-main {
+        padding: 14px;
+    }
+
+    .profile-card {
+        padding: 14px;
+    }
+
+    .page-header h1,
+    .calendar-title h1 {
+        font-size: 30px;
+    }
+
+    .card,
+    .admin-card {
+        padding: 15px;
+    }
+
+    .card h2,
+    .admin-card h2 {
+        font-size: 23px;
+    }
+
+    .form-grid {
+        gap: 12px;
+    }
+
+    .admin-table {
+        min-width: 760px;
+        font-size: 14px;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 11px;
+    }
+}
+
+/* Kalender specifiek */
+@media (max-width: 900px) {
+    .calendar-grid {
+        display: flex;
+        overflow-x: auto;
+        border-radius: 18px;
+    }
+
+    .weekday {
+        display: none;
+    }
+
+    .day-cell {
+        min-width: 170px;
+        border-top: none;
+        border-bottom: none;
+    }
+
+    .day-cell.empty {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        overflow: visible;
+        border-radius: 18px;
+    }
+
+    .weekday {
+        display: none;
+    }
+
+    .day-cell {
+        min-width: 0;
+        min-height: auto;
+        border-right: none;
+        border-top: 1px solid var(--border, #e1dbd1);
+    }
+
+    .day-cell.empty {
+        display: none;
+    }
+
+    .day-number {
+        font-size: 18px;
+    }
+
+    .calendar-event {
+        font-size: 13px;
+        padding: 10px;
+    }
+}
+
+/* Projecten specifiek */
+@media (max-width: 700px) {
+    .project-item {
+        grid-template-columns: 1fr !important;
+    }
+
+    .project-thumb,
+    .project-no-image {
+        width: 100% !important;
+        min-height: 210px;
+    }
+
+    .project-top,
+    .video-top,
+    .service-top {
+        flex-direction: column;
+    }
+}
+
+/* Gebruikersbeheer specifiek */
+@media (max-width: 700px) {
+    .inline-form,
+    .password-form {
+        width: 100%;
+    }
+
+    .inline-form button,
+    .password-form button {
+        width: 100%;
+    }
+}
